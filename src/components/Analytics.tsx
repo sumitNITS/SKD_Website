@@ -1,70 +1,71 @@
 import { useEffect } from 'react';
 
-// Google Analytics 4 tracking
-const GA_MEASUREMENT_ID = 'G-HKDZH5DZ00'; // Replace with your actual GA4 ID
+// Google Analytics 4 Measurement ID
+const GA_MEASUREMENT_ID = 'G-HKDZH5DZ00';
 
-export const initGA = () => {
-  if (typeof window === 'undefined') return;
-  
-  // Check if user has consented to analytics
-  const hasConsent = localStorage.getItem('analytics-consent');
-  if (hasConsent !== 'granted') return;
-
-  // Load GA script
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  document.head.appendChild(script);
-
-  // Initialize dataLayer
-  window.dataLayer = window.dataLayer || [];
-  function gtag(...args: any[]) {
-    window.dataLayer.push(args);
-  }
-  gtag('js', new Date());
-  gtag('config', GA_MEASUREMENT_ID, {
-    page_title: document.title,
-    page_location: window.location.href,
-    send_page_view: true,
-  });
-};
-
+/**
+ * Track a page view in Google Analytics
+ * Call this when navigating to a new section/hash
+ */
 export const pageView = (path: string) => {
-  if (typeof window === 'undefined' || !window.gtag) return;
-  
-  window.gtag('event', 'page_view', {
+  if (typeof window === 'undefined' || !(window as any).gtag) return;
+
+  (window as any).gtag('event', 'page_view', {
     page_path: path,
     page_location: window.location.href,
     page_title: document.title,
+    send_to: GA_MEASUREMENT_ID,
   });
 };
 
-export const trackEvent = (action: string, category: string, label?: string) => {
-  if (typeof window === 'undefined' || !window.gtag) return;
-  
-  window.gtag('event', action, {
+/**
+ * Track a custom event in Google Analytics
+ * @param action - Event action (e.g., 'click', 'download', 'schedule')
+ * @param category - Event category (e.g., 'cta', 'social', 'contact')
+ * @param label - Optional event label for additional context
+ */
+export const trackEvent = (
+  action: string,
+  category: string,
+  label?: string,
+  value?: number
+) => {
+  if (typeof window === 'undefined' || !(window as any).gtag) return;
+
+  (window as any).gtag('event', action, {
     event_category: category,
     event_label: label,
+    value: value,
+    send_to: GA_MEASUREMENT_ID,
   });
 };
 
-// Hook to track page views on route change
+/**
+ * React hook to track page views on hash changes
+ * Since this is a single-page site, we track hash navigation as page views
+ */
 export const usePageTracking = () => {
   useEffect(() => {
     const handleRouteChange = () => {
-      pageView(window.location.pathname + window.location.hash);
+      const path = window.location.pathname + window.location.hash;
+      pageView(path);
     };
 
-    // Track initial page
+    // Track initial page load
     handleRouteChange();
 
-    // Track on hash changes (since this is a single-page site)
+    // Track hash changes (section navigation)
     window.addEventListener('hashchange', handleRouteChange);
-    return () => window.removeEventListener('hashchange', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+    };
   }, []);
 };
 
-// Extend window type for gtag
+/**
+ * Extend window type for gtag
+ */
 declare global {
   interface Window {
     dataLayer: any[];
