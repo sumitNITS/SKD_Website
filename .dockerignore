@@ -1,0 +1,57 @@
+# =============================================================================
+# DockerIgnore - Keep Docker build context clean
+# =============================================================================
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker files (not needed in context)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+CHANGELOG.md
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment (will be passed at build time if needed)
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.eslintcache
+
+# Temporary files
+tmp/
+temp/
+*.tmp
