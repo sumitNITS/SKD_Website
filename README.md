@@ -37,13 +37,8 @@ npm run dev
 
 ## Docker Deployment
 
-### Production (Multi-Stage Build)
-
 ```bash
-# Build and run with Docker Compose
-docker-compose up --build -d
-
-# Or with Docker directly
+# Build and run with Docker 
 docker build -t portfolio .
 docker run -p 8080:8080 portfolio
 ```
