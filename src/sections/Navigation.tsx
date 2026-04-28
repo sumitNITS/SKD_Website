@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/use-theme';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
