@@ -7,7 +7,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-HKDZH5DZ00');
+      gtag('config', 'G-HKDZH5DZ00', { send_page_view: false });
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,26 +24,26 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://sumitkumardas.netlify.app" />
+    <meta property="og:url" content="https://sumitkumardas.netlify.app" id="meta-og-url" />
     <meta property="og:title" content="Sumit Kumar Das | DevOps Engineer" />
     <meta property="og:description" content="Results-driven DevOps Engineer specializing in Kubernetes orchestration, CI/CD automation, and cloud infrastructure. 5+ years of experience." />
-    <meta property="og:image" content="https://sumitkumardas.netlify.app/images/hero-profile.png" />
+    <meta property="og:image" content="https://sumitkumardas.netlify.app/images/hero-profile.png" id="meta-og-image" />
     <meta property="og:site_name" content="Sumit Kumar Das Portfolio" />
     <meta property="og:locale" content="en_IN" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://sumitkumardas.netlify.app" />
+    <meta property="twitter:url" content="https://sumitkumardas.netlify.app" id="meta-twitter-url" />
     <meta property="twitter:title" content="Sumit Kumar Das | DevOps Engineer" />
     <meta property="twitter:description" content="Results-driven DevOps Engineer specializing in Kubernetes orchestration, CI/CD automation, and cloud infrastructure. 5+ years of experience." />
-    <meta property="twitter:image" content="https://sumitkumardas.netlify.app/images/hero-profile.png" />
+    <meta property="twitter:image" content="https://sumitkumardas.netlify.app/images/hero-profile.png" id="meta-twitter-image" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB%3C/text%3E%3C/svg%3E" />
     <link rel="apple-touch-icon" href="/images/hero-profile.png" />
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://sumitkumardas.netlify.app" />
+    <link rel="canonical" href="https://sumitkumardas.netlify.app" id="canonical-link" />
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -59,6 +59,26 @@
         document.documentElement.classList.add(theme);
       })();
     </script>
+    <script>
+      (function() {
+        const origin = window.location.origin;
+        const path = window.location.pathname;
+        const imageUrl = `${origin}/images/hero-profile.png`;
+        const pageUrl = `${origin}${path}`;
+
+        const canonical = document.getElementById('canonical-link');
+        const ogUrl = document.getElementById('meta-og-url');
+        const twitterUrl = document.getElementById('meta-twitter-url');
+        const ogImage = document.getElementById('meta-og-image');
+        const twitterImage = document.getElementById('meta-twitter-image');
+
+        if (canonical) canonical.setAttribute('href', pageUrl);
+        if (ogUrl) ogUrl.setAttribute('content', pageUrl);
+        if (twitterUrl) twitterUrl.setAttribute('content', pageUrl);
+        if (ogImage) ogImage.setAttribute('content', imageUrl);
+        if (twitterImage) twitterImage.setAttribute('content', imageUrl);
+      })();
+    </script>
     <meta name="msapplication-TileColor" content="#2563eb" />
     
     <!-- Apple PWA -->
@@ -67,7 +87,7 @@
     <meta name="apple-mobile-web-app-title" content="SKD Portfolio" />
     
     <!-- Structured Data / JSON-LD -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" id="person-schema">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -98,8 +118,8 @@
         "Site Reliability Engineering"
       ],
       "sameAs": [
-        "https://linkedin.com/in/sumit-kumar-das",
-        "https://github.com/sumit-kumar-das"
+        "https://www.linkedin.com/in/sumit-kumar-das-87a599158",
+        "https://github.com/sumitNITS"
       ]
     }
     </script>

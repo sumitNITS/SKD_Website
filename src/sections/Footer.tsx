@@ -1,8 +1,23 @@
 import { Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { trackEvent } from '@/components/Analytics';
+import { RESUME_ASSET_PATH, RESUME_FILE_NAME } from '@/lib/resume';
 
-const Footer = () => {
+type FooterMode = 'home' | 'resume';
+
+interface FooterProps {
+  mode?: FooterMode;
+  resumeHref?: string;
+}
+
+const Footer = ({ mode = 'home', resumeHref = RESUME_ASSET_PATH }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const accent = '#14b8a6';
+  const isResumePage = mode === 'resume';
+
+  const handleResumeDownload = () => {
+    trackEvent('download', 'resume', 'resume_footer_download');
+  };
 
   return (
     <footer className="relative py-12" style={{ background: 'var(--color-bg-primary)', borderTop: '1px solid var(--color-border)' }}>
@@ -21,9 +36,32 @@ const Footer = () => {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#about" onClick={(e) => { e.preventDefault(); document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>About</a>
-            <a href="#experience" onClick={(e) => { e.preventDefault(); document.querySelector('#experience')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>Experience</a>
-            <a href="#contact" onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>Contact</a>
+            {isResumePage ? (
+              <>
+                <Link
+                  to="/"
+                  className="text-sm transition-colors duration-300 hover:text-[#14b8a6]"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  Back to Portfolio
+                </Link>
+                <a
+                  href={resumeHref}
+                  download={RESUME_FILE_NAME}
+                  onClick={handleResumeDownload}
+                  className="text-sm transition-colors duration-300 hover:text-[#14b8a6]"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  Download Resume
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="#about" onClick={(e) => { e.preventDefault(); document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>About</a>
+                <a href="#experience" onClick={(e) => { e.preventDefault(); document.querySelector('#experience')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>Experience</a>
+                <a href="#contact" onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm transition-colors duration-300 hover:text-[#14b8a6]" style={{ color: 'var(--color-text-muted)' }}>Contact</a>
+              </>
+            )}
           </div>
         </div>
       </div>

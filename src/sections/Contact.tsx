@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, MapPin, Linkedin, Github, BookOpen, Calendar, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, Linkedin, Github, Calendar, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,7 +27,6 @@ const Contact = () => {
   const socialLinks = [
     { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/sumit-kumar-das-87a599158' },
     { icon: Github, label: 'GitHub', href: 'https://github.com/sumitNITS' },
-    { icon: BookOpen, label: 'Hashnode', href: 'https://sumitnits.hashnode.dev/' },
   ];
 
   useEffect(() => {

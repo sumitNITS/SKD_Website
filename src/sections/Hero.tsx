@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ChevronDown, ArrowRight, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { trackEvent } from '@/components/Analytics';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const nameSumitRef = useRef<HTMLDivElement>(null);
   const nameKumarRef = useRef<HTMLDivElement>(null);
@@ -105,6 +108,11 @@ const Hero = () => {
     document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const openResume = () => {
+    trackEvent('click', 'cta', 'resume_hero');
+    navigate('/resume');
+  };
+
   return (
     <section ref={sectionRef} className="relative flex flex-col justify-center overflow-hidden" style={{ background: 'var(--color-bg-primary)', minHeight: '100dvh', paddingTop: '80px', paddingBottom: '80px' }}>
       {/* Background gradient */}
@@ -157,6 +165,15 @@ const Hero = () => {
               <Button onClick={scrollToAbout} className="gradient-bg text-white font-semibold px-5 sm:px-8 py-4 sm:py-6 rounded-lg hover:scale-105 transition-all duration-300 animate-pulse-glow group text-sm sm:text-base">
                 Let's Connect
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={openResume}
+                className="px-5 sm:px-8 py-4 sm:py-6 rounded-lg transition-all duration-300 text-sm sm:text-base"
+                style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+              >
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                Resume
               </Button>
               <Button variant="outline" onClick={() => document.querySelector('#experience')?.scrollIntoView({ behavior: 'smooth' })} className="px-5 sm:px-8 py-4 sm:py-6 rounded-lg transition-all duration-300 text-sm sm:text-base" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
                 View Experience
