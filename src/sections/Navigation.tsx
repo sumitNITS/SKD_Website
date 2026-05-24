@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Calendar, Sun, Moon } from 'lucide-react';
+import { useState, useEffect, type MouseEvent } from 'react';
+import { Menu, X, Calendar, Sun, Moon, ArrowLeft, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -8,12 +9,23 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useTheme } from '@/hooks/use-theme';
+import { trackEvent } from '@/components/Analytics';
+import { RESUME_ASSET_PATH, RESUME_FILE_NAME } from '@/lib/resume';
 
-const Navigation = () => {
+type NavigationMode = 'home' | 'resume';
+
+interface NavigationProps {
+  mode?: NavigationMode;
+  resumeHref?: string;
+}
+
+const Navigation = ({ mode = 'home', resumeHref = RESUME_ASSET_PATH }: NavigationProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const isResumePage = mode === 'resume';
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -32,6 +44,28 @@ const Navigation = () => {
 
   const scrollToSection = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogoClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    if (isResumePage) {
+      navigate('/');
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToPortfolio = () => {
+    trackEvent('click', 'navigation', 'resume_nav_back_to_portfolio');
+    setIsMobileMenuOpen(false);
+    navigate('/');
+  };
+
+  const handleResumeDownload = () => {
+    trackEvent('download', 'resume', 'resume_nav_download');
     setIsMobileMenuOpen(false);
   };
 
@@ -60,33 +94,32 @@ const Navigation = () => {
               href="#"
               className="text-2xl font-bold tracking-tight transition-colors duration-300 whitespace-nowrap"
               style={{ color: 'var(--color-text-primary)' }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={handleLogoClick}
             >
               SKD<span style={{ color: 'var(--color-accent)' }}>.</span>
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={() => scrollToSection(link.href)}
-                  className="relative text-sm font-medium transition-colors duration-300 group"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
-                  <span className="group-hover:text-[var(--color-text-primary)] transition-colors">
-                    {link.name}
-                  </span>
-                  <span
-                    className="absolute -bottom-1 left-0 w-0 h-[2px] transition-all duration-300 group-hover:w-full"
-                    style={{ background: 'var(--color-accent)' }}
-                  />
-                </button>
-              ))}
-            </div>
+            {!isResumePage && (
+              <div className="hidden lg:flex items-center gap-6">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.name}
+                    onClick={() => scrollToSection(link.href)}
+                    className="relative text-sm font-medium transition-colors duration-300 group"
+                    style={{ color: 'var(--color-text-muted)' }}
+                  >
+                    <span className="group-hover:text-[var(--color-text-primary)] transition-colors">
+                      {link.name}
+                    </span>
+                    <span
+                      className="absolute -bottom-1 left-0 w-0 h-[2px] transition-all duration-300 group-hover:w-full"
+                      style={{ background: 'var(--color-accent)' }}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Right side buttons */}
             <div className="hidden md:flex items-center gap-3">
@@ -108,17 +141,45 @@ const Navigation = () => {
                 )}
               </button>
 
-              {/* CTA Button */}
-              <Button
-                onClick={() => setIsCalendlyOpen(true)}
-                className="font-semibold px-5 py-2 rounded-lg hover:scale-105 transition-transform duration-300 animate-pulse-glow text-white border-0"
-                style={{
-                  background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent), var(--color-accent-light))',
-                }}
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Schedule a Call
-              </Button>
+              {isResumePage ? (
+                <>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="font-semibold px-5 py-2 rounded-lg"
+                    style={{
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)',
+                    }}
+                  >
+                    <a href={resumeHref} download={RESUME_FILE_NAME} onClick={handleResumeDownload}>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Resume
+                    </a>
+                  </Button>
+                  <Button
+                    onClick={handleBackToPortfolio}
+                    className="font-semibold px-5 py-2 rounded-lg hover:scale-105 transition-transform duration-300 text-white border-0"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent), var(--color-accent-light))',
+                    }}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Portfolio
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  onClick={() => setIsCalendlyOpen(true)}
+                  className="font-semibold px-5 py-2 rounded-lg hover:scale-105 transition-transform duration-300 animate-pulse-glow text-white border-0"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent), var(--color-accent-light))',
+                  }}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Schedule a Call
+                </Button>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -169,35 +230,66 @@ const Navigation = () => {
           }}
         >
           <div className="px-4 py-6 space-y-4">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => scrollToSection(link.href)}
-                className="block w-full text-left text-lg font-medium py-2 transition-colors"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                {link.name}
-              </button>
-            ))}
-            <Button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setIsCalendlyOpen(true);
-              }}
-              className="w-full font-semibold px-6 py-3 rounded-lg mt-2 text-white border-0"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent))',
-              }}
-            >
-              <Calendar className="w-4 h-4 mr-2" />
-              Schedule a Call
-            </Button>
+            {isResumePage ? (
+              <>
+                <Button
+                  onClick={handleBackToPortfolio}
+                  className="w-full font-semibold px-6 py-3 rounded-lg text-white border-0"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent))',
+                  }}
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Portfolio
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full font-semibold px-6 py-3 rounded-lg"
+                  style={{
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                >
+                  <a href={resumeHref} download={RESUME_FILE_NAME} onClick={handleResumeDownload}>
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Resume
+                  </a>
+                </Button>
+              </>
+            ) : (
+              <>
+                {navLinks.map((link) => (
+                  <button
+                    key={link.name}
+                    onClick={() => scrollToSection(link.href)}
+                    className="block w-full text-left text-lg font-medium py-2 transition-colors"
+                    style={{ color: 'var(--color-text-muted)' }}
+                  >
+                    {link.name}
+                  </button>
+                ))}
+                <Button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsCalendlyOpen(true);
+                  }}
+                  className="w-full font-semibold px-6 py-3 rounded-lg mt-2 text-white border-0"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-accent-dark), var(--color-accent))',
+                  }}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Schedule a Call
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Calendly Dialog */}
-      <Dialog open={isCalendlyOpen} onOpenChange={setIsCalendlyOpen}>
+      <Dialog open={!isResumePage && isCalendlyOpen} onOpenChange={setIsCalendlyOpen}>
         <DialogContent
           className="max-w-4xl h-[80vh] p-0"
           style={{

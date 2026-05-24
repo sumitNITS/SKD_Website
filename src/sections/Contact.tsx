@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, MapPin, Linkedin, Github, BookOpen, Calendar, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, Linkedin, Github, Calendar, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,13 +21,12 @@ const Contact = () => {
 
   const contactInfo = [
     { icon: Mail, label: 'Email', value: 'krsumit449@gmail.com', href: 'mailto:krsumit449@gmail.com' },
-    { icon: MapPin, label: 'Location', value: 'Assam, India', href: '#' },
+    { icon: MapPin, label: 'Location', value: 'Assam, India', href: 'https://www.google.com/maps/search/Assam,+India' },
   ];
 
   const socialLinks = [
     { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/sumit-kumar-das-87a599158' },
     { icon: Github, label: 'GitHub', href: 'https://github.com/sumitNITS' },
-    { icon: BookOpen, label: 'Hashnode', href: 'https://sumitnits.hashnode.dev/' },
   ];
 
   useEffect(() => {
@@ -67,7 +66,14 @@ const Contact = () => {
             <div ref={contentRef}>
               <div className="space-y-4 mb-10">
                 {contactInfo.map((item, index) => (
-                  <a key={index} href={item.href} className="contact-item group flex items-center gap-4 p-4 rounded-xl" style={{ background: 'var(--color-bg-tertiary)', border: '1px solid var(--color-border)' }}>
+                  <a
+                    key={index}
+                    href={item.href}
+                    className="contact-item group flex items-center gap-4 p-4 rounded-xl"
+                    style={{ background: 'var(--color-bg-tertiary)', border: '1px solid var(--color-border)' }}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-300 group-hover:bg-[rgba(20,184,166,0.1)]" style={{ background: 'var(--color-bg-primary)' }}>
                       <item.icon className="w-5 h-5 transition-colors duration-300" style={{ color: 'var(--color-text-muted)' }} />
                     </div>
