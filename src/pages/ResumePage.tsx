@@ -65,8 +65,8 @@ const ResumePage = () => {
               className="mt-4 max-w-2xl text-base leading-relaxed sm:text-lg"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              Recruiters and hiring managers can preview the PDF inline, download a copy, or jump
-              straight back to the main site to explore experience, skills, and projects.
+              Preview the PDF inline, download a copy, or return to the main site to explore my
+              experience, skills, and projects.
             </p>
           </div>
 
