@@ -20,7 +20,7 @@ const Experience = () => {
       period: 'July 2025 – Nov 2025',
       location: 'Hyderabad, India',
       highlights: [
-        'Managed high-throughput AWS MSK (Kafka) clusters and multi-environment SaaS deployments',
+        'Orchestrated cloud operations for high-scale fintech platforms across multi-environment SaaS deployments, maintaining 99.9% uptime on AWS and Kubernetes',
         'Provided L2/L3 on-call support, conducting Root Cause Analysis (RCA) and writing postmortems',
         'Collaborated with engineering teams to maintain resilient and compliant cloud operations',
       ],
